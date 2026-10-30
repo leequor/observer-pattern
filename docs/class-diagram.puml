@@ -1,0 +1,67 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+
+class NewsAgency {
+  -subscribers : CopyOnWriteArrayList<Subscriber>
+  +subscribe(subscriber : Subscriber) : void
+  +unsubscribe(subscriber : Subscriber) : boolean
+  +getSubscriberCount() : int
+  +publish(news : NewsItem) : void
+}
+
+interface Subscriber {
+  +update(news : NewsItem) : void
+}
+
+class NewsItem {
+  -title : String
+  -content : String
+  -category : NewsCategory
+  -publishedAt : LocalDateTime
+  +getTitle() : String
+  +getContent() : String
+  +getCategory() : NewsCategory
+  +getPublishedAt() : LocalDateTime
+  +toString() : String
+}
+
+enum NewsCategory {
+  WORLD
+  BUSINESS
+  TECHNOLOGY
+  SPORTS
+  ENTERTAINMENT
+}
+
+class EmailSubscriber {
+  -name : String
+  -email : String
+  -preferences : EnumSet<NewsCategory>
+  +update(news : NewsItem) : void
+  +isSubscribedTo(category : NewsCategory) : boolean
+  +setPreferences(categories : NewsCategory[]) : void
+  +getPreferences() : EnumSet<NewsCategory>
+}
+
+class SmsSubscriber {
+  -name : String
+  -phoneNumber : String
+  +update(news : NewsItem) : void
+}
+
+class PushSubscriber {
+  -name : String
+  -deviceId : String
+  +update(news : NewsItem) : void
+}
+
+NewsAgency "1" o--> "0..*" Subscriber : notifies
+Subscriber <|.. EmailSubscriber
+Subscriber <|.. SmsSubscriber
+Subscriber <|.. PushSubscriber
+NewsAgency ..> NewsItem : publishes
+NewsItem --> NewsCategory
+EmailSubscriber ..> NewsCategory : filters by
+
+@enduml

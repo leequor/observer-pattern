@@ -39,71 +39,14 @@
 
 ## UML Class Diagram
 
-```mermaid
-classDiagram
-    class NewsAgency {
-        -CopyOnWriteArrayList~Subscriber~ subscribers
-        +subscribe(Subscriber subscriber) void
-        +unsubscribe(Subscriber subscriber) boolean
-        +getSubscriberCount() int
-        +publish(NewsItem news) void
-    }
+![UML Class Diagram](docs/class-diagram.svg)
 
-    class Subscriber {
-        <<interface>>
-        +update(NewsItem news) void
-    }
+PlantUML source: [docs/class-diagram.puml](docs/class-diagram.puml)
 
-    class NewsItem {
-        -String title
-        -String content
-        -NewsCategory category
-        -LocalDateTime publishedAt
-        +getTitle() String
-        +getContent() String
-        +getCategory() NewsCategory
-        +getPublishedAt() LocalDateTime
-        +toString() String
-    }
+To regenerate the diagram:
 
-    class NewsCategory {
-        <<enumeration>>
-        WORLD
-        BUSINESS
-        TECHNOLOGY
-        SPORTS
-        ENTERTAINMENT
-    }
-
-    class EmailSubscriber {
-        -String name
-        -String email
-        -EnumSet~NewsCategory~ preferences
-        +update(NewsItem news) void
-        +isSubscribedTo(NewsCategory category) boolean
-        +setPreferences(NewsCategory[] categories) void
-        +getPreferences() EnumSet~NewsCategory~
-    }
-
-    class SmsSubscriber {
-        -String name
-        -String phoneNumber
-        +update(NewsItem news) void
-    }
-
-    class PushSubscriber {
-        -String name
-        -String deviceId
-        +update(NewsItem news) void
-    }
-
-    NewsAgency "1" o--> "0..*" Subscriber : notifies
-    Subscriber <|.. EmailSubscriber
-    Subscriber <|.. SmsSubscriber
-    Subscriber <|.. PushSubscriber
-    NewsAgency ..> NewsItem : publishes
-    NewsItem --> NewsCategory
-    EmailSubscriber ..> NewsCategory : filters by
+```bash
+java -jar plantuml.jar -tsvg docs/class-diagram.puml
 ```
 
 ## Design Summary
@@ -120,6 +63,10 @@ classDiagram
 ```
 observer-pattern/
 ├── README.md
+├── docs/
+│   ├── class-diagram.puml
+│   ├── class-diagram.png
+│   └── class-diagram.svg
 └── src/newsservice/
     ├── EmailSubscriber.java
     ├── NewsAgency.java
